@@ -1,0 +1,150 @@
+<?php
+$app_id = "435140049890925";
+$app_secret = "3d997aaadc93d6372c7524eabb4db42d";
+$post_login_url = "http://apps.facebook.com/bplphotocontest";
+
+$code = $_REQUEST["code"];
+
+//Obtain the access_token with publish_stream permission 
+if(empty($code)){ 
+    $dialog_url= "http://www.facebook.com/dialog/oauth?"
+     . "client_id=" .  $app_id 
+     . "&redirect_uri=" . urlencode( $post_login_url)
+     .  "&scope=publish_stream";
+    echo("<script>top.location.href='" . $dialog_url 
+    . "'</script>");
+}
+else {
+    $token_url="https://graph.facebook.com/oauth/access_token?"
+     . "client_id=" . $app_id 
+     . "&redirect_uri=" . urlencode( $post_login_url)
+     . "&client_secret=" . $app_secret
+     . "&code=" . $code;
+    $response = file_get_contents($token_url);
+    $params = null;
+    parse_str($response, $params);
+    $access_token = $params['access_token'];
+
+    // Show photo upload form to user and post to the Graph URL
+    $graph_url= "https://graph.facebook.com/395981780496378/photos?"
+    . "access_token=" .$access_token;
+?>
+
+
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style type="text/css">
+        .newStyle1 {
+            font-family: "Comic Sans MS";
+        }
+        .auto-style1 {
+            color: #FFFFCC;
+            font-size: x-large;
+        }
+        .newStyle2 {
+            font-family: "Comic Sans MS";
+        }
+        .auto-style3 {
+            font-family: "Comic Sans MS";
+            background-color: #FFFFFF;
+        }
+        .newStyle3 {
+            font-family: "Comic Sans MS";
+        }
+        .auto-style5 {
+            font-size: small;
+        }
+        .auto-style6 {
+            font-family: "Comic Sans MS";
+            font-size: x-large;
+        }
+        .auto-style7 {
+            background-color: #FFFFFF;
+            width: 59px;
+        }
+        #Submit1 {
+            background-color: #FFFFFF;
+        }
+        </style>
+</head>
+<body style="background-color:#FFCC00; width:800px">
+    <table style="width:100%; border:none">
+        <tr>
+            <td>
+                <img alt="#discoveryourbhopal" src="images/Icon.png"/>
+            </td>
+            <td>
+
+            </td>
+            <td style="text-align:center">
+                <span class="auto-style6">
+                #discoveryourbhopal</span>
+            </td>
+        </tr>
+    </table>
+    <table style="width:100%; border:none">
+        <tr>
+            <td style="text-align:center">
+                <img alt="City In Pics" src="images/CityInPics.png" /><br />
+                <span class="auto-style3"><a href="gallery.php">CLICK HERE TO VIEW GALLERY</a> </span>
+                </td>
+            <td>
+                <span class="auto-style1">Fill up the Form</span>
+                <br />
+<?php
+  echo '<form enctype="multipart/form-data" action="' .$graph_url .' "method="POST">';
+}
+?>
+                <table style="width: 100%; border:none">
+                    <tr>
+                        <td class="auto-style7">Name</td>
+                        <td>
+                            <input id="ID_Name" type="text" /></td>
+                    </tr>
+                    <tr>
+                        <td class="auto-style7">EMail</td>
+                        <td>
+                            <input id="ID_Email" type="text" /></td>
+                    </tr>
+                    <tr>
+                        <td class="auto-style7">Phone</td>
+                        <td>
+                            <input id="ID_Phone" type="text" /></td>
+                    </tr>
+                    <tr>
+                        <td class="auto-style7">City</td>
+                        <td>
+                            <input id="ID_City" type="text" /></td>
+                    </tr>
+                    <tr>
+                        <td class="auto-style7">Message</td>
+                        <td>
+                            <input id="ID_Message" type="text" /></td>
+                    </tr>
+                    <tr>
+                        <td class="auto-style7" colspan="2">
+                            Upload <input id="ID_PicFile" type="file" />
+                        </td>
+                    </tr>                    
+                    <tr>
+                        <td colspan="2">
+                            <input id="ID_ChkTerms" type="checkbox" />
+                            I agree with Terms and Conditions
+                        </td>
+                    </tr>
+                    
+                </table>
+                <div style="text-align:right">
+                <input id="Submit1" type="submit" value="Upload" />
+                    </div>
+                    </form>
+            </td>
+        </tr>
+    </table>
+    <p style="text-align: right" class="auto-style5">
+        *T&amp;C Apply</p>
+</body>
+</html>
